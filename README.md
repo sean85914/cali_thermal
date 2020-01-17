@@ -18,23 +18,23 @@
     - get_extrinsic -> src/get_extrinsic.cpp
     - example -> src/example.cpp
   - lib
-    - libalign_thermal_to_rgb.so: library for `align_thermal_to_rgb`, link this library in yourown source code
+    - libalign_thermal_to_rgb.so: library for `align_thermal_to_rgb`, link this library in your own source codes
   - result: some concrete alignment result
   - CMakeLists.txt
  
 ## BUILD
-* Since the `align_thermal_to_rgb` should do chessboard detection, so we have to build the `libcbdetect` first
-  1. cd && git clone https://github.com/sean85914/align_thermal_to_rgb.git
-  2. cd align_thermal_to_rgb/cali/libcbdetect
-  3. mkdir devel && cd devel && cmake ../ && make
-* Then we can build the `align_thermal_to_rgb`
-  4. cd ~/align_thermal_to_rgb/cali/align_thermal_to_rgb 
-  5. mkdir devel && cd devel && cmake ../ && make && cd ../bin
-  6. Then, if you have data for testing, run 
-  `./get_extrinsic [path_to_rgb_image] [path_to_depth_image] [path_to_thermal_image] 7`
-    Then you will get the output file **camera_model.txt**, an aligned thermal image and a combined one
+Since the `align_thermal_to_rgb` should do chessboard detection, so we have to build the `libcbdetect` first  
+  1. cd && git clone https://github.com/sean85914/align_thermal_to_rgb.git  
+  2. cd align_thermal_to_rgb/libcbdetect  
+  3. mkdir devel && cd devel && cmake ../ && make  
+then we can build the `align_thermal_to_rgb`  
+  4. cd ~/align_thermal_to_rgb/align_thermal_to_rgb  
+  5. mkdir devel && cd devel && cmake ../ && make && cd ../bin  
+  6. Then, if you have data for testing, run  
+  `./get_extrinsic [path_to_rgb_image] [path_to_depth_image] [path_to_thermal_image] 7`  
+    Then you will get the output file **camera_model.txt**, an **aligned thermal image** and a **combined one**
   7. With this file, you can use `align_thermal_to_rgb` class, while remember to set the rgb camera intrinsic with
 
 ## RESULT
-![image](github.com/sean85914/align_thermal_to_rgb/blob/master/cali/align_thermal_to_rgb/result/result.jpg)
+![image](https://github.com/sean85914/align_thermal_to_rgb/blob/master/align_thermal_to_rgb/result/result.jpg)
 
