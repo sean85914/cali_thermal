@@ -27,9 +27,9 @@ def callback(rgb_image, rgb_info, depth_image, thermal_image, thermal_info):
 def save_imgs_cb(req):
 	global cnt
 	lock = True
-	cv2.imwrite("color_%04d.jpg".format(cnt), image_rgb)
-	cv2.imwrite("depth_%04d.png".format(cnt), image_depth)
-	cv2.imwrite("thermal_%04d.jpg".format(cnt), image_thermal)
+	cv2.imwrite("color_{:04d}.jpg".format(cnt), image_rgb)
+	cv2.imwrite("depth_{:04d}.png".format(cnt), image_depth)
+	cv2.imwrite("thermal_{:04d}.jpg".format(cnt), image_thermal)
 	fs = open("intrinsic_file.txt", "w")
 	info_str = "rgb_intrinsic: [" + info_rgb.K[0] + ", " + info_rgb.K[4] + ", " + info_rgb.K[2] + ", " + info_rgb.K[5] + "]\n"
 	fs.write(info_str)
