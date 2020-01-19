@@ -33,16 +33,26 @@ then we can build the `align_thermal_to_rgb`
   4. cd ~/cali_thermal/align_thermal_to_rgb  
   5. mkdir devel && cd devel && cmake ../ && make && cd ../bin  
   6. Then, if you have data for testing (**i.e., chessboard in the image**), run  
-  `./get_extrinsic [path_to_rgb_image] [path_to_depth_image] [path_to_thermal_image] 7`  
+  `./get_extrinsic [path_to_rgb_intrisic_file] [path_to_thermal_intrinsic_file] [path_to_rgb_image] [path_to_depth_image] [path_to_thermal_image] 7`  
     Then you will get the output file **camera_model.txt**, an **aligned thermal image** and a **combined one**
-  7. With this file, you can use `align_thermal_to_rgb` class, while remember to set the rgb camera intrinsic with
+  7. With this file, you can use `align_thermal_to_rgb` class, for example,
+  `./example [path_to_output_txt] [path_to_rgb_intrinsic] [path_to_rgb_image] [path_to_depth_image] [path_to_thermal_image]`
 
 ## RESULT
 ![image](https://github.com/sean85914/align_thermal_to_rgb/blob/master/align_thermal_to_rgb/result/result.jpg)
-Sample output:
+Sample output:  
 ``
 intrinsic: [606.526, 625.874, 283.076, 247.947]
+``
+  
+``
 distortion: [0.144775, -32.6391, 0.0255662, 0.0092998, 274.744]
+``
+  
+``
 quaternion: [-0.0151522, 0.0415791, -0.0190183, 0.998839]
+``
+  
+``
 origin: [-0.0579184, 0.0172561, 0.119621]
 ``
