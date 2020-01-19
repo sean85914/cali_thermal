@@ -1,13 +1,22 @@
 #include <cali/align_thermal_to_rgb.h>
 
 int main(int argc, char** argv){
+  if(argc!=6){
+    std::cout << "\033[1;33mNot enough input arguments, exiting\033[0m\n";
+    exit(EXIT_FAILURE);
+  }
   align_thermal_to_rgb foo(argv[1]);
-  Intrinsic intrinsic{612.71576, 612.72723, 323.80862, 238.39876};
+  Intrinsic intrinsic;
+  parse_rgb_intrinsic(argv[2], intrinsic);
   foo.set_rgb_intrinsic(intrinsic);
   cv::Mat dst;
-  cv::Mat rgb = cv::imread(argv[2], CV_LOAD_IMAGE_COLOR);
-  cv::Mat depth = cv::imread(argv[3], CV_LOAD_IMAGE_ANYDEPTH);
-  cv::Mat thermal = cv::imread(argv[4], CV_LOAD_IMAGE_GRAYSCALE);
+  cv::Mat rgb = cv::imread(argv[3], CV_LOAD_IMAGE_COLOR);
+  cv::Mat depth = cv::imread(argv[4], CV_LOAD_IMAGE_ANYDEPTH);
+  cv::Mat thermal = cv::imread(argv[5], CV_LOAD_IMAGE_GRAYSCALE);
+  if(rgb.empty() || depth.empty() || thermal.empty()){
+    std::cout << "\033[1;33mNo image read, exiting\033[0m\n";
+    exit(EXIT_FAILURE);
+  }
   foo.set_rgb_image(rgb);
   foo.set_depth_image(depth);
   foo.set_thermal_image(thermal);

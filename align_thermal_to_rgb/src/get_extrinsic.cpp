@@ -28,18 +28,24 @@ void plot_corners_idx(cv::Mat image, cbdetect::Corner corners, cbdetect::Board b
 
 int main(int argc, char** argv)
 {
-  // ./[program_name] [rgb_image_path] [depth_image_path] [thermal_image_path] [kernel_size]
-  if(argc!=5) {
+  // ./[program_name] [rgb_intrinsic_path] [thermal_intrinsic_path] [rgb_image_path] [depth_image_path] [thermal_image_path] [kernel_size]
+  if(argc!=7) {
     show_help();
     exit(EXIT_FAILURE);
   }
+  Intrinsic intrinsic;
+  parse_rgb_intrinsic(argv[1], intrinsic);
+  cv::Mat thermal_intrinsic, thermal_distortion;
+  parse_thermal_intrinsic(argv[2], thermal_intrinsic, thermal_distortion);
   // Read input arguments
-  cv::Mat rgb     = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  cv::Mat depth   = cv::imread(argv[2], CV_LOAD_IMAGE_ANYDEPTH);
-  cv::Mat thermal = cv::imread(argv[3], CV_LOAD_IMAGE_GRAYSCALE);
-  int kernel_size = atoi(argv[4]);
-  // TODO: intrinsic may provided by a file?
-  Intrinsic intrinsic{612.71576, 612.72723, 323.80862, 238.39876};
+  cv::Mat rgb     = cv::imread(argv[3], CV_LOAD_IMAGE_COLOR);
+  cv::Mat depth   = cv::imread(argv[4], CV_LOAD_IMAGE_ANYDEPTH);
+  cv::Mat thermal = cv::imread(argv[5], CV_LOAD_IMAGE_GRAYSCALE);
+  if(rgb.empty() || depth.empty() || thermal.empty()){
+    std::cout << "\033[1;33mInvalid given image path, stop processing\033[0m\n";
+    exit(EXIT_FAILURE);
+  }
+  int kernel_size = atoi(argv[6]);
   std::vector<Position> position_vec; // Corner position in RGB image frame placeholder
   /*
    *  Detect corners in RGB image
@@ -100,10 +106,6 @@ int main(int argc, char** argv)
     }
   }
   obj.push_back(object_position); img.push_back(image_pixels);
-  // Initial guess from out-of-box information
-  // TODO: intrinsic may provided by a file?
-  cv::Mat thermal_intrinsic = (cv::Mat1f(3, 3) << 767.94273, 0, 317.24475, 0, 767.06879, 231.64493, 0, 0, 1);
-  cv::Mat thermal_distortion = (cv::Mat1f(1, 5) << -0.50404, 0.26894, 0.00345, -0.00075, 0.00000);
   cv::Mat rvec, tvec; // Extrinsic placeholder
   cv::calibrateCamera(obj, img, thermal.size(), thermal_intrinsic, thermal_distortion, rvec, tvec, CV_CALIB_USE_INTRINSIC_GUESS);
   cv::Mat thermal_to_rgb = cv::Mat::zeros(rgb.size(), thermal.type());

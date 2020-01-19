@@ -39,4 +39,10 @@ then we can build the `align_thermal_to_rgb`
 
 ## RESULT
 ![image](https://github.com/sean85914/align_thermal_to_rgb/blob/master/align_thermal_to_rgb/result/result.jpg)
-
+Sample output:
+``
+intrinsic: [606.526, 625.874, 283.076, 247.947]
+distortion: [0.144775, -32.6391, 0.0255662, 0.0092998, 274.744]
+quaternion: [-0.0151522, 0.0415791, -0.0190183, 0.998839]
+origin: [-0.0579184, 0.0172561, 0.119621]
+``

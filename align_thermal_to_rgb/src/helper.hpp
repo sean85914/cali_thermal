@@ -25,7 +25,7 @@ typedef struct Position{
 
 void show_help(void){
   std::cout << "\033[1;31mNot enough argument given!\n\033[0m";
-  std::cout << "\033[1;31nPlease provide image paths of rgb, depth and thermal (`string`), and then the kernel size (`int`)\033[0m\n";
+  std::cout << "\033[1;31mPlease provide path of camera models (`string`), image paths of rgb, depth and thermal (`string`), and then the kernel size (`int`)\033[0m\n";
 }
 
 void print_position(int idx, Position pos){
@@ -141,14 +141,11 @@ void write_file(cv::Mat intrinsic, cv::Mat distortion, tf::Transform extrinsic){
   fs.close();
 }
 
-bool parse_line(std::string line, std::vector<double> &vec){
+bool parse_line(std::string line, std::string target_key, int target_size, std::vector<double> &vec){
   std::size_t colon = line.find(":");
   if(colon==std::string::npos) return false;
   std::string key = line.substr(0, colon);
-  if(key!="quaternion" &&
-     key!="origin" &&
-     key!="intrinsic" &&
-     key!="distortion") 
+  if(key!=target_key)
     return false;
   std::string data_str = line.substr(colon+2, line.length()-colon-1);
   std::size_t comma = data_str.find(",");
@@ -161,10 +158,7 @@ bool parse_line(std::string line, std::vector<double> &vec){
     comma = data_str.find(",", comma+2);
   }
   component_str = data_str.substr(start_idx, data_str.length()-start_idx); vec.push_back(atof(component_str.c_str()));
-  if((key=="quaternion" && vec.size()!=4) || 
-     (key=="origin" && vec.size()!=3) ||
-     (key=="intrinsic" && vec.size()!=4) || 
-     (key=="distortion" && vec.size()!=5)) 
+  if(vec.size()!=target_size)
     return false;
   return true;
 }
@@ -177,10 +171,10 @@ void read_file(std::string in_file, cv::Mat &intrinsic, cv::Mat &distortion, tf:
   std::vector<double> intrinsic_vec, distortion_vec, quat_vec, trans_vec;
   std::getline(fs, intrinsic_line); std::getline(fs, distortion_line);
   std::getline(fs, quat_line); std::getline(fs, trans_line);
-  assert(parse_line(intrinsic_line, intrinsic_vec));
-  assert(parse_line(distortion_line, distortion_vec));
-  assert(parse_line(quat_line, quat_vec));
-  assert(parse_line(trans_line, trans_vec));
+  assert(parse_line(intrinsic_line, "intrinsic", 4, intrinsic_vec));
+  assert(parse_line(distortion_line, "distortion", 5, distortion_vec));
+  assert(parse_line(quat_line, "quaternion", 4, quat_vec));
+  assert(parse_line(trans_line, "origin", 3, trans_vec));
   intrinsic = (cv::Mat1f(3, 3) << intrinsic_vec[0], 0.0,  intrinsic_vec[2] \
                                , 0.0, intrinsic_vec[1], intrinsic_vec[3] \
                                , 0.0, 0.0, 1.0);
@@ -194,4 +188,37 @@ void read_file(std::string in_file, cv::Mat &intrinsic, cv::Mat &distortion, tf:
   tf::Quaternion quat(quat_vec[0], quat_vec[1], quat_vec[2], quat_vec[3]); // qx, qy, qz, qw
   tf::Vector3 trans(trans_vec[0], trans_vec[1], trans_vec[2]); // x, y, z
   extrinsic = tf::Transform(quat, trans);
+}
+
+void parse_rgb_intrinsic(std::string in_file, Intrinsic &intrinsic){
+  std::fstream fs;
+  fs.open(in_file, std::fstream::in);
+  assert(fs.is_open());
+  std::string line;
+  std::getline(fs, line);
+  std::vector<double> vec;
+  assert(parse_line(line, "rgb_intrinsic", 4, vec));
+  intrinsic.fx = vec[0]; // fx
+  intrinsic.fy = vec[1]; // fy
+  intrinsic.cx = vec[2]; // cx
+  intrinsic.cy = vec[3]; // cy
+}
+
+void parse_thermal_intrinsic(std::string in_file, cv::Mat &intrinsic, cv::Mat &distortion){
+  std::fstream fs;
+  fs.open(in_file, std::fstream::in);
+  assert(fs.is_open());
+  std::string line;
+  std::vector<double> vec;
+  std::getline(fs, line);
+  assert(parse_line(line, "thermal_intrinsic", 4, vec));
+  intrinsic = (cv::Mat1f(3, 3) << vec[0], 0.0, vec[2],
+                                 0.0, vec[1], vec[3],
+                                 0.0, 0.0, 1.0);
+  vec.clear();
+  std::getline(fs, line);
+  assert(parse_line(line, "thermal_distortion", 5, vec));
+  distortion = (cv::Mat1f(1, 5) << vec[0], vec[1], vec[2], vec[3], vec[4]);
+  intrinsic.convertTo(intrinsic, CV_64F);
+  distortion.convertTo(distortion, CV_64F);
 }
