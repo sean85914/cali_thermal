@@ -25,7 +25,7 @@ typedef struct Position{
 
 void show_help(void){
   std::cout << "\033[1;31mNot enough argument given!\n\033[0m";
-  std::cout << "\033[1;31mPlease provide path of camera models (`string`), image paths of rgb, depth and thermal (`string`), and then the kernel size (`int`)\033[0m\n";
+  std::cout << "\033[1;31m./[program_name] [rgb_intrinsic_path] [thermal_intrinsic_path] [rgb_image_path] [depth_image_path] [thermal_image_path] [kernel_size]\033[0m\n";
 }
 
 void print_position(int idx, Position pos){

@@ -3,6 +3,7 @@
 int main(int argc, char** argv){
   if(argc!=6){
     std::cout << "\033[1;33mNot enough input arguments, exiting\033[0m\n";
+    std::cout << "\033[1;33m./example [camera_model_path] [rgb_intrinsic_path] [rgb_image_path] [depth_image_path] [thermal_image_path]\033[0m\n";
     exit(EXIT_FAILURE);
   }
   align_thermal_to_rgb foo(argv[1]);

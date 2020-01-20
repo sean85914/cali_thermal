@@ -77,6 +77,7 @@ void align_thermal_to_rgb::align(cv::Mat &dst){
         }
       }
     }
+    has_rgb_image = false; has_depth_image = false; has_thermal_image = false; // Processed
   }else{
     std::cout << "\033[1;33mNot ready, ignore request...\033[0m\n";
   }
