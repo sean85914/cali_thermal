@@ -1,3 +1,4 @@
+#include <chrono>
 #include <cali/align_thermal_to_rgb.h>
 
 int main(int argc, char** argv){
@@ -21,7 +22,11 @@ int main(int argc, char** argv){
   foo.set_rgb_image(rgb);
   foo.set_depth_image(depth);
   foo.set_thermal_image(thermal);
+  auto s_ts = std::chrono::high_resolution_clock::now();
   foo.align(dst);
+  auto e_ts = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(e_ts-s_ts).count();
+  std::cout << "Alignemnt spend " << duration*1e-6 << " ms\n";
   cv::imwrite("aligned.jpg", dst);
   foo.show_model();
   return 0;
