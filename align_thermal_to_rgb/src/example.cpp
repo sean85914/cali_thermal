@@ -2,9 +2,9 @@
 #include <cali/align_thermal_to_rgb.h>
 
 int main(int argc, char** argv){
-  if(argc!=6){
+  if(argc!=7){
     std::cout << "\033[1;33mNot enough input arguments, exiting\033[0m\n";
-    std::cout << "\033[1;33m./example [camera_model_path] [rgb_intrinsic_path] [rgb_image_path] [depth_image_path] [thermal_image_path]\033[0m\n";
+    std::cout << "\033[1;33m./example [camera_model_path] [rgb_intrinsic_path] [rgb_image_path] [depth_image_path] [thermal_image_path] [outut_file_name]\033[0m\n";
     exit(EXIT_FAILURE);
   }
   align_thermal_to_rgb foo(argv[1]);
@@ -27,7 +27,18 @@ int main(int argc, char** argv){
   auto e_ts = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(e_ts-s_ts).count();
   std::cout << "Alignemnt spend " << duration*1e-6 << " ms\n";
-  cv::imwrite("aligned.jpg", dst);
+  std::string output_file(argv[6]);
+  bool valid_extension = (output_file.find(".jpg")!=std::string::npos);
+  assert(valid_extension);
+  cv::imwrite(argv[6], dst);
   foo.show_model();
+  cv::Mat color_map; cv::applyColorMap(dst, color_map, cv::COLORMAP_JET);
+  cv::Mat combined;
+  cv::addWeighted(rgb, 1.0, color_map, 0.3, 0.0, combined);
+  std::string substr;
+  std::size_t extension_pos = output_file.find(".jpg");
+  substr = output_file.substr(0, extension_pos);
+  substr += "_combined.jpg";
+  cv::imwrite(substr.c_str(), combined);
   return 0;
 }

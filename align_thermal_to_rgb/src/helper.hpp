@@ -141,6 +141,7 @@ void write_file(cv::Mat intrinsic, cv::Mat distortion, tf::Transform extrinsic){
   fs.close();
 }
 
+// data_key: [data1, data2, ...]
 bool parse_line(std::string line, std::string target_key, int target_size, std::vector<double> &vec){
   std::size_t colon = line.find(":");
   if(colon==std::string::npos) return false;

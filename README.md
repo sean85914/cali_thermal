@@ -12,7 +12,7 @@
   - src
     - helper.hpp: some helper functions
     - align_thermal_to_rgb.cpp: class implementation for `align_thermal_to_rgb`
-    - get_extrinsic.cpp: intrinsic/ extrinsic calibration for thermal camera, user provideds **rgb, depth and thermal images**, and **an interger for mean filter kernel size**, then it will generate a file with **thermal camera intrinsic, distortion coefficients** and **rgb-to-thermal extrinsic**, named in `camera_model.txt`
+    - get_extrinsic.cpp: intrinsic/ extrinsic calibration for thermal camera, user provideds **intrinsic of rgb and thermal cameras, rgb, depth and thermal images**, and **an interger for mean filter kernel size**, then it will generate a file with **thermal camera intrinsic, distortion coefficients** and **rgb-to-thermal extrinsic**, named in `camera_model.txt`
     - example.cpp: `align_thermal_to_rgb` usage example
   - bin
     - get_extrinsic -> src/get_extrinsic.cpp: get thermal intrinsic and rgb-to-thermal extrinsic parameters with images with chessboard inside
@@ -22,6 +22,7 @@
   - lib
     - libalign_thermal_to_rgb.so: library for `align_thermal_to_rgb`, link this library in your own source codes
   - result: some concrete alignment result
+  - example_input: example input for `get_extrinsic` execution
   - CMakeLists.txt
  
 ## BUILD

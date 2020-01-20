@@ -5,6 +5,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 find_package(OpenCV REQUIRED)
 find_package(tf REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 string(REPLACE "align_thermal_to_rgb" "libcbdetect" libcbdetection ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(
@@ -12,6 +13,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${libcbdetection}/include
   ${tf_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 message(STATUS ${tf_INCLUDE_DIRS})
