@@ -64,8 +64,8 @@ int main(int argc, char** argv)
     exit(EXIT_FAILURE);
   }  
   #ifdef DEBUG
-  cbdetect::plot_corners(image_in, corners);
-  cbdetect::plot_boards(image_in, corners, boards, params);
+  cbdetect::plot_corners(rgb, corners);
+  cbdetect::plot_boards(rgb, corners, boards, params);
   plot_corners_idx(rgb, corners, boards[0]);
   #endif
   int internal_corners_cnt = 0;

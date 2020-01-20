@@ -22,6 +22,10 @@ foreach(dir ${dirs})
   message(STATUS "dir='${dir}'")
 endforeach()
 
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+  ADD_DEFINITIONS(-DDEBUG)
+ENDIF()
+
 add_library(align_thermal_to_rgb src/align_thermal_to_rgb.cpp)
 target_link_libraries(align_thermal_to_rgb ${OpenCV_LIBRARIES} ${tf_LIBRARIES})
 
