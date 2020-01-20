@@ -29,6 +29,7 @@ Since the `align_thermal_to_rgb` should do chessboard detection, so we have to b
   1. cd && git clone https://github.com/sean85914/cali_thermal.git  
   2. cd cali_thermal/libcbdetect  
   3. mkdir devel && cd devel && cmake ../ && make  
+  (*Note: If you want to show more detail information, use cmake ../ -DCMAKE_BUILD_TYPE=Debug then make*)
 then we can build the `align_thermal_to_rgb`  
   4. cd ~/cali_thermal/align_thermal_to_rgb  
   5. mkdir devel && cd devel && cmake ../ && make && cd ../bin  
