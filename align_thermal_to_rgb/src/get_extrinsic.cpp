@@ -59,6 +59,10 @@ int main(int argc, char** argv)
   params.corner_type = cbdetect::SaddlePoint;
   cbdetect::find_corners(rgb, corners, params);
   cbdetect::boards_from_corners(rgb, corners, boards, params);
+  if(boards.size()==0){
+    std::cout << "\033[1;33mNo board detected, make sure that chessboard pattern in both RGB and thermal images\033[0m\n";
+    exit(EXIT_FAILURE);
+  }  
   #ifdef DEBUG
   cbdetect::plot_corners(image_in, corners);
   cbdetect::plot_boards(image_in, corners, boards, params);
@@ -85,6 +89,10 @@ int main(int argc, char** argv)
   std::vector<cbdetect::Board>boards_thermal;
   cbdetect::find_corners(thermal, corners_thermal, params);
   cbdetect::boards_from_corners(thermal, corners_thermal, boards_thermal, params);
+  if(boards_thermal.size()==0){
+    std::cout << "\033[1;33mNo board detected, make sure that chessboard pattern in both RGB and thermal images\033[0m\n";
+    exit(EXIT_FAILURE);
+  }
   #ifdef DEBUG
   plot_corners_idx(thermal, corners_thermal, boards_thermal[0]);
   #endif
