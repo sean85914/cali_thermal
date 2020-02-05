@@ -86,13 +86,23 @@ int main(int argc, char** argv)
    *  Detect board in thermal image
    */
   cbdetect::Corner corners_thermal;
-  std::vector<cbdetect::Board>boards_thermal;
+  std::vector<cbdetect::Board> boards_thermal;
   cbdetect::find_corners(thermal, corners_thermal, params);
   cbdetect::boards_from_corners(thermal, corners_thermal, boards_thermal, params);
   if(boards_thermal.size()==0){
     std::cout << "\033[1;33mNo board detected, make sure that chessboard pattern in both RGB and thermal images\033[0m\n";
     exit(EXIT_FAILURE);
   }
+  // Number of corners in rgb and thermal should be ther same
+  int internal_corners_cnt_thermal = 0;
+  for(int i=0; i<boards_thermal[0].idx.size(); ++i){
+    for(int j=0; j<boards_thermal[0].idx[i].size(); ++j){
+      if(boards_thermal[0].idx[i][j]<0) continue;
+      ++internal_corners_cnt_thermal;
+    }
+  }
+  bool same_num_of_corners = (internal_corners_cnt==internal_corners_cnt_thermal);
+  assert(same_num_of_corners);
   #ifdef DEBUG
   plot_corners_idx(thermal, corners_thermal, boards_thermal[0]);
   #endif
